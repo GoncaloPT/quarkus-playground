@@ -1,0 +1,32 @@
+version: "2.4"
+services:
+  quarkus_oauth_client:
+    build:
+      context: quarkus-oauth-client/
+      dockerfile: src/main/docker/Dockerfile.legacy-jar
+    environment:
+      - DEFAULT_AUTH_SERVER_URL=${DEFAULT_AUTH_SERVER_URL}
+      - DEFAULT_AUTH_CLIENT_ID=${DEFAULT_AUTH_CLIENT_ID}
+      - DEFAULT_AUTH_CLIENT_SECRET=${DEFAULT_AUTH_CLIENT_SECRET}
+      - DEFAULT_AUTH_SCOPES=${DEFAULT_AUTH_SCOPES}
+    ports:
+      # api
+      - "8090:8090"
+  quarkus_oauth_server:
+    build:
+      context: quarkus-oauth-server/
+      dockerfile: src/main/docker/Dockerfile.legacy-jar
+    environment:
+      - DEFAULT_AUTH_SERVER_URL=${DEFAULT_AUTH_SERVER_URL}
+      - DEFAULT_AUTH_CLIENT_ID=${DEFAULT_AUTH_CLIENT_ID}
+      - DEFAULT_AUTH_CLIENT_SECRET=${DEFAULT_AUTH_CLIENT_SECRET}
+      - DEFAULT_AUTH_SCOPES=${DEFAULT_AUTH_SCOPES}
+      #M2M
+      - M2M_AUTH_SERVER_URL=${M2M_AUTH_SERVER_URL}
+      - M2M_AUTH_CLIENT_ID=${M2M_AUTH_CLIENT_ID}
+      - M2M_AUTH_CLIENT_SECRET=${M2M_AUTH_CLIENT_SECRET}
+      - M2M_AUTH_SCOPES=${M2M_AUTH_SCOPES}
+    ports:
+      # api
+      - "8080:8080"
+
