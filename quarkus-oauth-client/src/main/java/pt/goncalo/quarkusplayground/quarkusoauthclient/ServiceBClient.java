@@ -3,6 +3,7 @@ package pt.goncalo.quarkusplayground.quarkusoauthclient;
 import io.quarkus.oidc.client.NamedOidcClient;
 import io.quarkus.oidc.client.OidcClient;
 import io.quarkus.oidc.client.Tokens;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -20,6 +21,9 @@ public class ServiceBClient {
     @NamedOidcClient("dsmp")
     Tokens token;
 
+    @ConfigProperty(name= "oauth-client.server.url")
+    String clientEndpointUrl;
+
     /**
      * Direct usage of {@link OidcClient}, this will always fetch a new token from oIdc.
      * This is for demonstration purposes only and should not be used in production systems!
@@ -36,7 +40,7 @@ public class ServiceBClient {
     public String callHello() throws IOException, InterruptedException {
         var httpClient = HttpClient.newBuilder().build();
         var request = HttpRequest
-                .newBuilder(URI.create("http://localhost:8080/m2m/hello"))
+                .newBuilder(URI.create(clientEndpointUrl))
                 .setHeader("Authorization", "Bearer " + token.getAccessToken())
                 .GET()
                 .build();

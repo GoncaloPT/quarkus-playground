@@ -78,16 +78,16 @@
 
 FROM maven:3.8.1-openjdk-17-slim AS build
 COPY . .
-RUN mvn clean package
+RUN --mount=type=cache,target=/root/.m2,rw mvn -B package -DskipTests=true -Dquarkus.package.type=uber-jar
 FROM registry.access.redhat.com/ubi8/openjdk-17:1.11
 
 ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en'
 
 
-COPY --from=build target/lib/* /deployments/lib/
+# COPY --from=build target/lib/* /deployments/lib/
 COPY --from=build target/*-runner.jar /deployments/quarkus-run.jar
 
-EXPOSE 8080
+EXPOSE 8090
 USER 185
 ENV JAVA_OPTS="-Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jboss.logmanager.LogManager"
 ENV JAVA_APP_JAR="/deployments/quarkus-run.jar"
